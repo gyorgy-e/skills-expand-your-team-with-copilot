@@ -472,6 +472,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function buildSocialShareUrls(activityName, description) {
+    const activityPageUrl = `${window.location.origin}${window.location.pathname}#activity=${encodeURIComponent(activityName)}`;
+    const shareMessage = `Check out "${activityName}" at Mergington High School activities! ${description}`;
+    const encodedPageUrl = encodeURIComponent(activityPageUrl);
+    const encodedMessage = encodeURIComponent(shareMessage);
+
+    return {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedPageUrl}`,
+      x: `https://twitter.com/intent/tweet?text=${encodedMessage}&url=${encodedPageUrl}`,
+      email: `mailto:?subject=${encodeURIComponent(
+        `Activity idea: ${activityName}`
+      )}&body=${encodeURIComponent(`${shareMessage}\n\n${activityPageUrl}`)}`,
+    };
+  }
+
   // Function to render a single activity card
   function renderActivityCard(name, details) {
     const activityCard = document.createElement("div");
@@ -519,6 +534,8 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
+    const shareLinks = buildSocialShareUrls(name, details.description);
+
     activityCard.innerHTML = `
       ${tagHtml}
       <h4>${name}</h4>
@@ -528,6 +545,34 @@ document.addEventListener("DOMContentLoaded", () => {
         <span class="tooltip-text">Regular meetings at this time throughout the semester</span>
       </p>
       ${capacityIndicator}
+      <div class="share-actions">
+        <span class="share-label">Share:</span>
+        <a
+          class="share-button"
+          href="${shareLinks.facebook}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Share ${name} on Facebook"
+        >
+          Facebook
+        </a>
+        <a
+          class="share-button"
+          href="${shareLinks.x}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Share ${name} on X"
+        >
+          X
+        </a>
+        <a
+          class="share-button"
+          href="${shareLinks.email}"
+          aria-label="Share ${name} by email"
+        >
+          Email
+        </a>
+      </div>
       <div class="participants-list">
         <h5>Current Participants:</h5>
         <ul>
